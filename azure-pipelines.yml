@@ -7,8 +7,9 @@ parameters:
 - name: listOfStrings
   type: object
   default:
-  - one
-  - two
+  - dev
+  - test
+  - prod
 
 trigger:
 - main
@@ -20,6 +21,9 @@ stages:
 - ${{ each stage in parameters.listOfStrings }}:
   - stage: ${{ stage }}
     displayName: Build ${{ stage }}
+    variables:
+      - template: variables-${{ stage }}.yml
+      
     jobs:
     - job: Build
       displayName: Build
@@ -32,19 +36,3 @@ stages:
         displayName: 'Run a multi-line script'
       - script: echo Build completed on `date`
         displayName: 'Run a one-line script'
-
-- stage: Build
-  displayName: Build stage
-  jobs:  
-  - job: Build
-    displayName: Build
-    steps:
-    - script: echo Build started on `date`
-      displayName: 'Run a one-line script'
-    - script: |
-        echo Add other tasks to build, test, and deploy your project.
-        echo See https://aka.ms/yaml
-      displayName: 'Run a multi-line script'
-    - script: echo Build completed on `date`
-      displayName: 'Run a one-line script'
-
