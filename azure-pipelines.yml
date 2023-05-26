@@ -23,10 +23,10 @@ stages:
     displayName: Build ${{ stage }}
     variables:
       - template: variables-${{ stage }}.yml
-      
+
     jobs:
     - job: Build
-      displayName: Build
+      displayName: Build $(example)
       steps:
       - script: echo Build started on `date`
         displayName: 'Run a one-line script'
