@@ -3,17 +3,48 @@
 # Add steps that build, run tests, deploy, and more:
 # https://aka.ms/yaml
 
+parameters:
+- name: listOfStrings
+  type: object
+  default:
+  - one
+  - two
+
 trigger:
 - main
 
 pool:
   vmImage: ubuntu-latest
 
-steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
+stages:
+- ${{ each stage in parameters.listOfStrings }}:
+  - stage: ${{ stage }}
+    displayName: Build ${{ stage }}
+    jobs:
+    - job: Build
+      displayName: Build
+      steps:
+      - script: echo Build started on `date`
+        displayName: 'Run a one-line script'
+      - script: |
+          echo Add other tasks to build, test, and deploy your project.
+          echo See https://aka.ms/yaml
+        displayName: 'Run a multi-line script'
+      - script: echo Build completed on `date`
+        displayName: 'Run a one-line script'
 
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+- stage: Build
+  displayName: Build stage
+  jobs:  
+  - job: Build
+    displayName: Build
+    steps:
+    - script: echo Build started on `date`
+      displayName: 'Run a one-line script'
+    - script: |
+        echo Add other tasks to build, test, and deploy your project.
+        echo See https://aka.ms/yaml
+      displayName: 'Run a multi-line script'
+    - script: echo Build completed on `date`
+      displayName: 'Run a one-line script'
+
