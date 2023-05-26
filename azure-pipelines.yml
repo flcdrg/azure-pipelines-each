@@ -26,5 +26,6 @@ stages:
           - job: Build
             displayName: "Build ${{ variables.example }}" # Can't use Macro $(example) or Runtime $[variables.example] here
             steps:
+              - checkout: none
               - script: echo Build completed on `date`
                 displayName: "${{ stage.other }}"
