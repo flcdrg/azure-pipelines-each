@@ -26,7 +26,7 @@ stages:
 
     jobs:
     - job: Build
-      displayName: Build $(example)
+      displayName: "Build Macro $(example), Runtime $[variables.example], Template ${{ variables.example }}"
       steps:
       - script: echo Build started on `date`
         displayName: 'Run a one-line script'
