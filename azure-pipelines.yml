@@ -27,5 +27,9 @@ stages:
             displayName: "Build ${{ variables.example }}" # Can't use Macro $(example) or Runtime $[variables.example] here
             steps:
               - checkout: none
+              - ${{ if eq(stage.name, 'dev') }}:
+                  - script: echo Build started on `date`
+                    displayName: "Just Dev"
+
               - script: echo Build completed on `date`
                 displayName: "${{ stage.other }}"
