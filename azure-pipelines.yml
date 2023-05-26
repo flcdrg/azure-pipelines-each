@@ -1,38 +1,30 @@
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
-
 parameters:
-- name: listOfStrings
-  type: object
-  default:
-  - dev
-  - test
-  - prod
+  - name: stages
+    type: object
+    default:
+      - name: dev
+        other: a
+      - name: test
+        other: b
+      - name: prod
+        other: c
 
 trigger:
-- main
+  - main
 
 pool:
   vmImage: ubuntu-latest
 
 stages:
-- ${{ each stage in parameters.listOfStrings }}:
-  - stage: ${{ stage }}
-    displayName: Build ${{ stage }}
-    variables:
-      - template: variables-${{ stage }}.yml
+  - ${{ each stage in parameters.stages }}:
+      - stage: ${{ stage.name }}
+        displayName: Build ${{ stage.name }}
+        variables:
+          - template: variables-${{ stage.name }}.yml
 
-    jobs:
-    - job: Build
-      displayName: "Build Macro $(example), Runtime $[variables.example], Template ${{ variables.example }}"
-      steps:
-      - script: echo Build started on `date`
-        displayName: 'Run a one-line script'
-      - script: |
-          echo Add other tasks to build, test, and deploy your project.
-          echo See https://aka.ms/yaml
-        displayName: 'Run a multi-line script'
-      - script: echo Build completed on `date`
-        displayName: 'Run a one-line script'
+        jobs:
+          - job: Build
+            displayName: "Build ${{ variables.example }}" # Can't use Macro $(example) or Runtime $[variables.example] here
+            steps:
+              - script: echo Build completed on `date`
+                displayName: "${{ stage.other }}"
