@@ -33,3 +33,13 @@ stages:
 
               - script: echo Build completed on `date`
                 displayName: "${{ stage.other }}"
+
+  - stage: Single
+    dependsOn: []
+    jobs:
+      - job: Single
+        steps:
+          - checkout: none
+          - script: |
+              echo "parameters.stages[0].name: ${{ parameters.stages[0].name }}"
+              echo "parameters.stages['test'].name: ${{ parameters.stages['test'].name }}"
