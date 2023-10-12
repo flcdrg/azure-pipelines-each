@@ -7,13 +7,16 @@ parameters:
       - name: test
         other: b
       - name: prod
-        other: c
+        other: $(myvar)
 
 trigger:
   - main
 
 pool:
   vmImage: ubuntu-latest
+
+variables:
+  myvar: var_c
 
 stages:
   - ${{ each stage in parameters.stages }}:
