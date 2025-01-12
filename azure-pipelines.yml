@@ -21,13 +21,25 @@ variables:
 stages:
   - ${{ each stage in parameters.stages }}:
       - stage: ${{ stage.name }}
-        displayName: Build ${{ stage.name }}
+        displayName: Build ${{ stage.name }} # Can't use Macro $(example) or Runtime $[variables.example] here
         variables:
           - template: variables-${{ stage.name }}.yml
 
         jobs:
           - job: Build
-            displayName: "Build ${{ variables.example }}" # Can't use Macro $(example) or Runtime $[variables.example] here
+            ${{ if eq(stage.name, 'dev') }}:
+              displayName: "Build ${{ variables.example }} dev"
+            ${{ else }}:
+              displayName: "Build ${{ variables.example }} not dev"
+
+            pool:
+              ${{ if eq(stage.name, 'dev') }}:
+                vmImage: ubuntu-latest
+              ${{ elseif eq(stage.name, 'test') }}:
+                vmImage: windows-latest
+              ${{ else }}:
+                vmImage: macos-latest
+
             steps:
               - checkout: none
               - ${{ if eq(stage.name, 'dev') }}:
