@@ -25,7 +25,8 @@ stages:
       - stage: ${{ stage.name }}
         displayName: Build ${{ stage.name }} # Can't use Macro $(example) or Runtime $[variables.example] here
         dependsOn:
-          - ${{ stage.previous }}
+          - ${{ if ne(stage.previous, '') }}:
+              - ${{ stage.previous }}
 
         variables:
           - template: variables-${{ stage.name }}.yml
