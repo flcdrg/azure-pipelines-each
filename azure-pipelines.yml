@@ -6,8 +6,10 @@ parameters:
         other: a
       - name: test
         other: b
+        previous: dev
       - name: prod
         other: $(myvar)
+        previous: test
 
 trigger:
   - main
@@ -22,6 +24,9 @@ stages:
   - ${{ each stage in parameters.stages }}:
       - stage: ${{ stage.name }}
         displayName: Build ${{ stage.name }} # Can't use Macro $(example) or Runtime $[variables.example] here
+        dependsOn:
+          - ${{ stage.previous }}
+
         variables:
           - template: variables-${{ stage.name }}.yml
 
